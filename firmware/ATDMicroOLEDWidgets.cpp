@@ -251,6 +251,116 @@ void MicroViewSlider::drawPointer() {
 // Slider Widget - end
 // -------------------------------------------------------------------------------------
 
+// -------------------------------------------------------------------------------------
+// Gauge Widget - start
+// -------------------------------------------------------------------------------------
+
+/** \brief MicroViewGauge class initilisation.
+	Initialise the MicroViewGauge widget with default style.
+ */
+MicroViewGauge::MicroViewGauge(uint8_t newx, uint8_t newy, int16_t min, int16_t max):
+MicroViewWidget(newx, newy, min, max),
+style(0),
+radius(15),
+noValDraw(false),
+prevValue(value)
+{
+    drawFace();
+    drawPointer(); // Initial pointer (will be erased)
+    draw();
+}
+
+/** \brief MicroViewGauge class initialisation with style.
+	Initialise the MicroViewGauge widget with style WIDGETSTYLE0 or WIDGETSTYLE1.
+	Add WIDGETNOVALUE to the style to suppress displaying the numeric value. E.g. WIDGETSTYLE0 + WIDGETNOVALUE
+ */
+MicroViewGauge::MicroViewGauge(uint8_t newx, uint8_t newy, int16_t min, int16_t max, uint8_t sty):
+MicroViewWidget(newx, newy, min, max),
+prevValue(value)
+{
+    noValDraw = sty & WIDGETNOVALUE; // set "no value draw" flag as specified
+    
+    if ((sty & ~WIDGETNOVALUE) == WIDGETSTYLE0) {
+        style=0;
+        radius=15;
+    }
+    else {
+        style=1;
+        radius=23;
+    }
+    
+    drawFace();
+    drawPointer(); // Initial pointer (will be erased)
+    draw();
+}
+
+/** \brief Draw widget face.
+	Draw image/diagram representing the widget's face.
+ */
+void MicroViewGauge::drawFace() {
+    float degreeSec, fromSecX, fromSecY, toSecX, toSecY;
+    
+    uView.circle(posX, posY, radius);
+    
+    for (int i=150;i<=390;i+=30) {	// Major tick from 150 degree to 390 degree
+        degreeSec=i*(PI/180);
+        fromSecX = cos(degreeSec) * (radius / 1.5);
+        fromSecY = sin(degreeSec) * (radius / 1.5);
+        toSecX = cos(degreeSec) * radius;
+        toSecY = sin(degreeSec) * radius;
+        uView.line(1+posX+fromSecX, 1+posY+fromSecY, 1+posX+toSecX, 1+posY+toSecY);
+    }
+    
+    if (radius>15) {
+        for (int i=165;i<=375;i+=30) {	// Minor tick from 165 degree to 375 degree
+            degreeSec=i*(PI/180);
+            fromSecX = cos(degreeSec) * (radius / 1.3);
+            fromSecY = sin(degreeSec) * (radius / 1.3);
+            toSecX = cos(degreeSec) * radius;
+            toSecY = sin(degreeSec) * radius;
+            uView.line(1+posX+fromSecX, 1+posY+fromSecY, 1+posX+toSecX, 1+posY+toSecY);
+        }
+    }
+}
+
+/** \brief Draw widget value.
+	Convert the current value of the widget and draw the ticker representing the value.
+ */
+void MicroViewGauge::draw() {
+    drawPointer(); // Erase the previous pointer
+    prevValue=value;
+    drawPointer(); // Draw the current pointer
+    
+    // Draw numeric value if required
+    if (!noValDraw) {
+        uint8_t offsetX = posX - (maxValLen * 3 - 1);  // Offset left of centre to print the value
+        
+        if (style > 0)
+            uView.setCursor(offsetX, posY+10);
+        else
+            uView.setCursor(offsetX, posY+11);
+        
+        drawNumValue(prevValue);
+    }
+}
+
+// Use XOR mode to erase or draw the pointer for prevValue
+void MicroViewGauge::drawPointer() {
+    float degreeSec, toSecX, toSecY;
+    
+    // total 240 degree in the widget with 150 degree starting point
+    degreeSec = (((float)(uint16_t)(prevValue-minValue) / (float)(uint16_t)(maxValue-minValue)
+                  * 240) + 150) * (PI / 180);
+    
+    toSecX = cos(degreeSec) * (radius / 1.2);
+    toSecY = sin(degreeSec) * (radius / 1.2);
+    uView.line(posX, posY, 1+posX+toSecX, 1+posY+toSecY, WHITE, XOR);
+}
+
+// -------------------------------------------------------------------------------------
+// Gauge Widget - end
+// -------------------------------------------------------------------------------------
+
 MicroOLED uView;
 
 uint8_t getInt16PrintLen(int16_t val) {

@@ -60,6 +60,19 @@ class MicroViewSlider: public MicroViewWidget{
     int16_t prevValue;
 };
 
+class MicroViewGauge: public MicroViewWidget{
+public:
+    MicroViewGauge(uint8_t newx, uint8_t newy, int16_t min, int16_t max);
+    MicroViewGauge(uint8_t newx, uint8_t newy, int16_t min, int16_t max, uint8_t sty);
+    void draw();
+    void drawFace();
+private:
+    void drawPointer();
+    uint8_t style, radius;
+    bool noValDraw;
+    int16_t prevValue;
+};
+
 uint8_t getInt16PrintLen(int16_t val);
 extern MicroOLED uView;
 #endif
