@@ -1,5 +1,5 @@
-#include "ATDMicroOLEDWidgets.h"
-
+#include "MicroViewWidget.h"
+#include <math.h>
 // -------------------------------------------------------------------------------------
 // MicroViewWidget Class - start
 // -------------------------------------------------------------------------------------
@@ -148,21 +148,21 @@ prevValue(value)
     
     switch(sty & ~WIDGETNOVALUE) {
         case WIDGETSTYLE1:
-        style=1;
-        totalTicks=60;
-        break;
+            style=1;
+            totalTicks=60;
+            break;
         case WIDGETSTYLE2:
-        style=2;
-        totalTicks=20;
-        break;
+            style=2;
+            totalTicks=20;
+            break;
         case WIDGETSTYLE3:
-        style=3;
-        totalTicks=40;
-        break;
+            style=3;
+            totalTicks=40;
+            break;
         default:
-        style=0;
-        totalTicks=30;
-        break;
+            style=0;
+            totalTicks=30;
+            break;
     }
     
     drawFace();
@@ -214,17 +214,17 @@ void MicroViewSlider::draw() {
     if (!noValDraw) {
         switch(style) {
             case 0:
-            uView.setCursor(posX+totalTicks+4, posY+1);
-            break;
+                uView.setCursor(posX+totalTicks+4, posY+1);
+                break;
             case 1:
-            uView.setCursor(posX, posY+10);
-            break;
+                uView.setCursor(posX, posY+10);
+                break;
             case 2:
-            uView.setCursor(posX+1, posY+totalTicks+4);
-            break;
+                uView.setCursor(posX+1, posY+totalTicks+4);
+                break;
             default:
-            uView.setCursor(posX+9, posY);
-            break;
+                uView.setCursor(posX+9, posY);
+                break;
         }
         
         drawNumValue(prevValue);

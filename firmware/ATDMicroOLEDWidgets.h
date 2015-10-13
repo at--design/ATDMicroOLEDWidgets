@@ -10,9 +10,10 @@
 // Added for Vertical slider styles
 #define WIDGETSTYLE2			2
 #define WIDGETSTYLE3			3
+#define PI 3.14159
 
 class MicroViewWidget {
-    public:
+public:
     MicroViewWidget(uint8_t newx, uint8_t newy, int16_t min, int16_t max);
     uint8_t getX();
     uint8_t getY();
@@ -33,7 +34,7 @@ class MicroViewWidget {
     void reDraw();
     void drawNumValue(int16_t value);
     virtual ~MicroViewWidget(){};
-    protected:
+protected:
     uint8_t posX;
     uint8_t posY;
     int16_t minValue;
@@ -41,19 +42,19 @@ class MicroViewWidget {
     int16_t value;
     uint8_t valLen;
     uint8_t maxValLen;
-    private:
+private:
     /** \brief Draw or erase the widget pointer. Overridden by child class. */
     virtual void drawPointer(){};
     void setMaxValLen();
 };
 
 class MicroViewSlider: public MicroViewWidget{
-    public:
+public:
     MicroViewSlider(uint8_t newx, uint8_t newy, int16_t min, int16_t max);
     MicroViewSlider(uint8_t newx, uint8_t newy, int16_t min, int16_t max, uint8_t sty);
     void draw();
     void drawFace();
-    private:
+private:
     void drawPointer();
     uint8_t style, totalTicks;
     bool noValDraw;
