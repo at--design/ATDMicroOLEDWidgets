@@ -1,5 +1,5 @@
-#ifndef MicroViewWidget_h
-#define MicroViewWidget_h
+#ifndef ATDMicroViewWidget_h
+#define ATDMicroViewWidget_h
 
 #include <stdio.h>
 #include "application.h"

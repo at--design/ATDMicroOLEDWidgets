@@ -1,4 +1,4 @@
-#include "MicroViewWidget.h"
+#include "ATDMicroViewWidget.h"
 #include <math.h>
 // -------------------------------------------------------------------------------------
 // MicroViewWidget Class - start
